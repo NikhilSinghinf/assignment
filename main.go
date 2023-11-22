@@ -9,7 +9,6 @@ import (
 type Data struct {
   ID        string `json:"ID"`
   Value     string `json:"Value"`
-  Timestamp int64  `json:"Timestamp"`
 }
 
 type SmartContract struct {
