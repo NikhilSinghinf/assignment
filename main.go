@@ -7,10 +7,9 @@ import (
 )
 
 type Data struct {
-  ID        string `json:"ID"`
-  Value     string `json:"Value"`
+  ID  string `json:"ID"`
+  Value  string `json:"Value"`
 }
-
 type SmartContract struct {
   contractapi.Contract
 }
@@ -18,8 +17,8 @@ type SmartContract struct {
 // Store data in blockchain
 func (s *SmartContract) StoreData(ctx contractapi.TransactionContext, id string, value string) error {
   data := Data{
-    ID:        id,
-    Value:     value,
+    ID:    id,
+    Value:  value,
   
   }
 
@@ -27,12 +26,10 @@ func (s *SmartContract) StoreData(ctx contractapi.TransactionContext, id string,
   if err != nil {
     return err
   }
-
   err = ctx.GetStub().PutState(data.ID, dataBytes)
   if err != nil {
     return err
   }
-
   return nil
 }
 
@@ -42,12 +39,10 @@ func (s *SmartContract) RetrieveData(ctx contractapi.TransactionContext, id stri
   if err != nil {
     return nil, err
   }
-
   if dataBytes == nil {
     return nil, fmt.Errorf("Data with ID %s does not exist", id)
   }
-
-  return dataBytes, nil
+return dataBytes, nil
 }
 
 // Get history of data from blockchain
@@ -56,7 +51,6 @@ func (s *SmartContract) GetHistory(ctx contractapi.TransactionContext, id string
   if err != nil {
     return nil, err
   }
-
   var historyData []Data
   for historyIterator.HasNext() {
     historyDataBytes, _ := historyIterator.Next()
@@ -65,16 +59,13 @@ func (s *SmartContract) GetHistory(ctx contractapi.TransactionContext, id string
     if err != nil {
       return nil, err
     }
-
-    historyData = append(historyData, *historyDataJSON)
+  historyData = append(historyData, *historyDataJSON)
   }
-
   historyDataBytes, err := json.Marshal(historyData)
   if err != nil {
     return nil, err
   }
-
-  return historyDataBytes, nil
+return historyDataBytes, nil
 }
 
 // Get data based on a non-primary key using CouchDB rich query
@@ -83,15 +74,13 @@ func (s *SmartContract) GetByNonPrimaryKey(ctx contractapi.TransactionContext, q
   if err != nil {
     return nil, err
   }
-
-  var data []Data
+var data []Data
   for queryResults.HasNext() {
     queryResult, err := queryResults.Next()
     if err != nil {
       return nil, err
     }
-
-    dataBytes := queryResult.Value
+   dataBytes := queryResult.Value
     dataJSON := &Data{}
     err = json.Unmarshal(dataBytes, dataJSON)
     if err != nil {
@@ -100,12 +89,10 @@ func (s *SmartContract) GetByNonPrimaryKey(ctx contractapi.TransactionContext, q
 
     data = append(data, *dataJSON)
   }
-
   dataBytes, err := json.Marshal(data)
   if err != nil {
     return nil, err
   }
-
   return dataBytes, nil
 }
 
@@ -115,6 +102,5 @@ func main() {
     fmt.Printf("Error creating chaincode: %s\n", err)
     return
   }
-
   chaincode.Start()
 }
